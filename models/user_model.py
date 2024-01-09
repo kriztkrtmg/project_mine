@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from enum import Enum
-from typing import Any
+from typing import Any, Union
 
 class status_choice(str, Enum):
     Success = "Success"
@@ -11,11 +11,11 @@ class dataResponse(BaseModel):
     Message : Any
 
 class createUserModel(BaseModel):
-    username : str
+    phone : int
     password : str
     email : str
 
 class loginUserModel(BaseModel):
-    identity : str
+    identity : Union[str, int]
     password : str
 

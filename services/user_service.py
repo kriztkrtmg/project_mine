@@ -42,10 +42,10 @@ class userServiceClass():
         Returns:
             dataResponse: creates account if username and email are unique and returns success message
         """
-        if await self.md_user.find_one({"_id":data.username}):
+        if await self.md_user.find_one({"_id":data.phone}):
             return dataResponse(
                 Status="Error",
-                Message="Sorry, this username is taken. Please try a different one."
+                Message="Sorry, this phone is taken. Please try a different one."
             )
         if await self.md_user.find_one({"email":data.email}):
             return dataResponse(
@@ -54,7 +54,7 @@ class userServiceClass():
             )
         hashed_pswd, salt_token = await self.pswd_generator(data.password)
         document = {
-            "_id": data.username,
+            "_id": data.phone,
             "email": data.email,
             "security_key": hashed_pswd,
             "security_token": salt_token,
@@ -78,7 +78,7 @@ class userServiceClass():
         search_query = {"$or": [{"_id": data.identity}, {"email": data.identity}]}
         doc = await self.md_user.find_one(search_query)
         if not doc:
-            return dataResponse(Status="Error",Message="Username|Email not registered.")
+            return dataResponse(Status="Error",Message="Phone|Email not registered.")
         if await self.check_password(doc, data.password):
             return dataResponse(Status="Success",Message="User Logged In")
         return dataResponse(Status="Error",Message="Password Incorrect")
