@@ -75,10 +75,14 @@ class userServiceClass():
         Returns:
             dataResponse: if user authencation is correct, then user logged in successfully
         """
-        search_query = {"$or": [{"_id": data.identity}, {"email": data.identity}]}
+        try:
+            identity = int(data.identity)
+            search_query = {"$or": [{"_id": int(data.identity)}, {"email": data.identity}]}
+        except ValueError:
+            search_query = {"$or": [{"_id": data.identity}, {"email": data.identity}]}
         doc = await self.md_user.find_one(search_query)
         if not doc:
-            return dataResponse(Status="Error",Message="Phone|Email not registered.")
+            return dataResponse(Status="Error",Message="Email / Phone not registered.")
         if await self.check_password(doc, data.password):
             return dataResponse(Status="Success",Message="User Logged In")
         return dataResponse(Status="Error",Message="Password Incorrect")
